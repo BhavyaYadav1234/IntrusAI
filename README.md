@@ -1,0 +1,2 @@
+# IntrusAI
+AI powered IDS
