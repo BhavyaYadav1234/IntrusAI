@@ -1,9 +1,20 @@
 const mongoose = require('mongoose');
 
-const intrusionSchema = new mongoose.Schema({
-    timestamp: { type: Date, default: Date.now },
-    type: { type: String, required: true },
-    confidence: { type: Number, required: true }
+const intrusionSchema = mongoose.Schema({
+    type: {
+        type: String,
+        required: true,
+    },
+    severity: {
+        type: String,
+        required: true,
+    },
+    sourceIP: {
+        type: String,
+        required: true,
+    },
+}, {
+    timestamps: true,
 });
 
 const Intrusion = mongoose.model('Intrusion', intrusionSchema);

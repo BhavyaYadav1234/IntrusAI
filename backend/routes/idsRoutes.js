@@ -1,7 +1,8 @@
 const express = require('express');
-const { getIntrusions } = require('../controllers/idsController');
 const router = express.Router();
 
-router.get('/', getIntrusions);
+const { getIntrusions } = require('../controllers/idsController');
+
+router.get('/intrusions', getIntrusions);
 
 module.exports = router;
