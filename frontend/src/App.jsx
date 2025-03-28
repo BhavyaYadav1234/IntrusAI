@@ -1,29 +1,26 @@
-import { useState } from 'react';
-import './App.css';
+import { useState, useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
-import Intrusions from './backend/models/Intrusions';
+import './App.css';
 
 function App() {
   const [intrusions, setIntrusions] = useState([]);
 
+  // Fetch Intrusions Data from Backend API
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/intrusions');
+      const response = await fetch('http://localhost:7878/api/intrusions');
       const data = await response.json();
       setIntrusions(data);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
-  const App = () => {
-    return (
-      <Routes>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/intrusions" element={<Intrusions />} />
-      </Routes>
-    );
-  };
+
+  useEffect(() => {
+    fetchData(); // Fetch data on component mount
+  }, []);
+
   return (
     <div>
       <h1>IntrusAI - Intrusion Detection System</h1>
@@ -51,6 +48,11 @@ function App() {
           </tbody>
         </table>
       )}
+
+      {/* Define Routes */}
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+      </Routes>
     </div>
   );
 }
