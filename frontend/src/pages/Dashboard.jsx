@@ -1,4 +1,3 @@
-// src/components/Dashboard.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaShieldAlt, FaExclamationCircle, FaCheckCircle, FaSyncAlt } from "react-icons/fa";
@@ -22,9 +21,22 @@ const Dashboard = () => {
   };
 
   return (
-    <Container className="dashboard-container">
+    <Container className="dashboard-container text-light p-4">
+      {/* Welcome Message at the Top */}
+      <h1 className="text-center">IntrusAI - Intrusion Detection System</h1>
+      <p className="text-center">Monitor your device security and detect intrusions in real-time.</p>
+
+      {/* Fetch Intrusions Button (Only Once) */}
+      {status.vulnerabilities > 0 && (
+        <div className="text-center mb-4">
+          <Button variant="danger" onClick={fetchIntrusions}>
+            Fetch Intrusions
+          </Button>
+        </div>
+      )}
+
       {/* Security Status Section */}
-      <h1 className="text-center">Device Security Status</h1>
+      <h2 className="mt-3">Device Security Status</h2>
       <div className="security-status-card">
 
         {/* Firewall Status */}
@@ -71,19 +83,6 @@ const Dashboard = () => {
             )}
           </div>
         </div>
-
-        {/* Fetch Intrusions Button */}
-        {status.vulnerabilities > 0 && (
-          <Button variant="danger" onClick={fetchIntrusions} className="mt-3">
-            Fetch Intrusions
-          </Button>
-        )}
-      </div>
-
-      {/* Welcome Message */}
-      <div className="text-center mt-4">
-        <h2>Welcome to IntrusAI!</h2>
-        <p>Monitor your device security and detect intrusions in real-time.</p>
       </div>
     </Container>
   );
