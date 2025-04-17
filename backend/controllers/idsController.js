@@ -1,4 +1,4 @@
-const Intrusion = require('../models/Intrusion');
+const Intrusion = require('../models/Intrusions');
 
 const getIntrusions = async(req, res) => {
     try {
