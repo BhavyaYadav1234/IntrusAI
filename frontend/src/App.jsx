@@ -1,15 +1,20 @@
-import { useState, useEffect } from 'react';
+// frontend/src/App.jsx
+import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
-import './App.css';
+import IntrusionsPage from './pages/Intrusions'; // ✅ frontend component for /intrusions
 
 function App() {
   return (
-    <Routes>
-      {/* Dashboard will handle the UI */}
-      <Route path="/" element={<Dashboard />} />
-    </Routes>
+    <div>
+      <h1>IntrusAI - Intrusion Detection System</h1>
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/intrusions" element={<IntrusionsPage />} />
+      </Routes>
+    </div>
   );
 }
 
 export default App;
+
