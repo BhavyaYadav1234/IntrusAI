@@ -1,20 +1,36 @@
 // src/components/Dashboard.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaShieldAlt, FaExclamationCircle, FaCheckCircle } from "react-icons/fa";
 import { ProgressBar } from "react-bootstrap";
+import io from "socket.io-client";
+
+// Initialize socket connection
+const socket = io("http://localhost:5200"); // adjust if your backend runs on a different port
 
 const Dashboard = () => {
   const navigate = useNavigate();
 
-  // Example state for device security status
+  // State for device security status
   const [status, setStatus] = useState({
-    firewall: true,
-    antivirus: false,
-    updates: true,
     vulnerabilities: 5, // Number of vulnerabilities
     deviceHealth: 80, // Percentage of device health
   });
+
+  // Listen for real-time status updates from the server
+  useEffect(() => {
+    socket.on("status_update", ({ health, vulnerabilityCount }) => {
+      setStatus({
+        vulnerabilities: vulnerabilityCount,
+        deviceHealth: health,
+      });
+    });
+
+    // Clean up the socket event on component unmount
+    return () => {
+      socket.off("status_update");
+    };
+  }, []);
 
   // Handle redirect to intrusions page
   const fetchIntrusions = () => {
@@ -27,45 +43,6 @@ const Dashboard = () => {
       <div className="security-status">
         <h1>Device Security Status</h1>
         <div className="security-status-card">
-
-          {/* Firewall Status */}
-          <div className="status-item">
-            <FaShieldAlt size={30} />
-            <h3>Firewall</h3>
-            <div className="status">
-              {status.firewall ? (
-                <FaCheckCircle color="green" />
-              ) : (
-                <FaExclamationCircle color="red" />
-              )}
-            </div>
-          </div>
-
-          {/* Antivirus Status */}
-          <div className="status-item">
-            <FaShieldAlt size={30} />
-            <h3>Antivirus</h3>
-            <div className="status">
-              {status.antivirus ? (
-                <FaCheckCircle color="green" />
-              ) : (
-                <FaExclamationCircle color="red" />
-              )}
-            </div>
-          </div>
-
-          {/* System Updates Status */}
-          <div className="status-item">
-            <FaShieldAlt size={30} />
-            <h3>System Updates</h3>
-            <div className="status">
-              {status.updates ? (
-                <FaCheckCircle color="green" />
-              ) : (
-                <FaExclamationCircle color="red" />
-              )}
-            </div>
-          </div>
 
           {/* Device Health */}
           <div className="status-item">
@@ -96,7 +73,6 @@ const Dashboard = () => {
 
       {/* Existing Dashboard Content */}
       <div className="other-dashboard-content">
-        {/* Add other dashboard content here */}
         <h2>Welcome to IntrusAI!</h2>
         <p>Monitor your device security and detect intrusions in real-time.</p>
       </div>
