@@ -8,7 +8,6 @@ import Report from './pages/Report';
 function App() {
   return (
     <div>
-      <h1>IntrusAI - Intrusion Detection System</h1>
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/intrusions" element={<IntrusionsPage />} />
@@ -19,4 +18,3 @@ function App() {
 }
 
 export default App;
-
