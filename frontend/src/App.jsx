@@ -3,6 +3,7 @@ import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
 import IntrusionsPage from './pages/Intrusions'; // ✅ frontend component for /intrusions
+import Report from './pages/Report';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Dashboard />} />
         <Route path="/intrusions" element={<IntrusionsPage />} />
+        <Route path="/Report" element={<Report />} />
       </Routes>
     </div>
   );
