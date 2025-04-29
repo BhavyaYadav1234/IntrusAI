@@ -1,5 +1,6 @@
 const Intrusion = require('../models/Intrusions');
-const { sendIntrusionUpdate } = require('../server'); // import the emit function
+const { sendIntrusionUpdate } = require('../server'); // WebSocket emit
+const { sendToLogstash } = require('../utils/logger'); // ELK log sender
 
 // GET all intrusions
 const getIntrusions = async(req, res) => {
@@ -31,8 +32,18 @@ const addIntrusion = async(req, res) => {
 
         console.log('New intrusion logged:', newIntrusion);
 
-        // Emit real-time update to all connected clients
+        // Emit real-time update to all connected clients via WebSocket
         sendIntrusionUpdate(newIntrusion);
+
+        // Log intrusion event to Logstash
+        sendToLogstash({
+            timestamp: new Date(),
+            type,
+            sourceIP,
+            destinationIP,
+            description,
+            status: 'Detected',
+        });
 
         res.status(201).json(newIntrusion);
     } catch (error) {

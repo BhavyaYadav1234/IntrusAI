@@ -1,10 +1,16 @@
+<<<<<<< HEAD
 # backend/Dockerfile
 
 FROM node:18-alpine
+=======
+# Use official Python image
+FROM python:3.10-slim
+>>>>>>> 2c1228656c6892a7dc2a97afeb9b01eecafd7370
 
 # Set working directory
 WORKDIR /app
 
+<<<<<<< HEAD
 # Copy package files and install dependencies
 COPY package*.json ./
 RUN npm install
@@ -17,3 +23,16 @@ EXPOSE 5200
 
 # Start the server
 CMD ["node", "server.js"]
+=======
+# Copy your backend code
+COPY . /app
+
+# Install dependencies
+RUN pip install flask flask-socketio eventlet scapy
+
+# Expose the port your Flask app runs on
+EXPOSE 5200
+
+# Start your Python server
+CMD ["python", "sniffer_server.py"]
+>>>>>>> 2c1228656c6892a7dc2a97afeb9b01eecafd7370
