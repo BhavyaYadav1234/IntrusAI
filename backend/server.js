@@ -44,6 +44,16 @@ const sendIntrusionUpdate = (data) => {
 // Export the emit function for other files to use
 module.exports = { sendIntrusionUpdate };
 
+app.post('/api/predict', async (req, res) => {
+    try {
+        const response = await axios.post('http://localhost:5300/predict', req.body);
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error calling Flask API:', error.message);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
 // Start the server
 const PORT = process.env.PORT || 5200;
 server.listen(PORT, () => {
