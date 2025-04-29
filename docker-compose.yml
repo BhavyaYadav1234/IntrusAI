@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5200:5200"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./backend:/app
+    depends_on:
+      - snort
+    networks:
+      - intrusai-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+    networks:
+      - intrusai-net
+
+  snort:
+    image: snort3/snort3
+    container_name: snort
+    networks:
+      - intrusai-net
+    command: snort -i eth0 -A console
+
+networks:
+  intrusai-net:
+    driver: bridge
