@@ -1,20 +1,18 @@
-version: '3'
+version: '3.9'
 
 services:
   backend:
-    build: ./backend
+    build:
+      context: ./backend
     ports:
       - "5200:5200"
-    working_dir: /app
-    volumes:
-      - ./backend:/app
-    command: node server.js
+    container_name: intrus_ai3-backend-1
 
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
     ports:
-      - "5173:5173"
-    working_dir: /app
-    volumes:
-      - ./frontend:/app
-    command: npm run dev -- --host
+      - "5175:5175"
+    container_name: intrus_ai3-frontend-1
+    depends_on:
+      - backend
