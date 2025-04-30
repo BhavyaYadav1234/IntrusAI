@@ -68,7 +68,7 @@ function App() {
             {Array.isArray(result.prediction)
               ? result.prediction.join(", ")
               : JSON.stringify(result.prediction)}
-          </p>
+          </p> 
         </div>
       )}
     </div>
