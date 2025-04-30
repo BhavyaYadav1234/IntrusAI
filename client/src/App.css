@@ -1,0 +1,89 @@
+/* App.css - Hacker Theme */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Fira Code', monospace;
+  background-color: #0f0f0f; /* Dark hacker background */
+  color: #00ff9f; /* Neon green */
+}
+
+.App {
+  text-align: center;
+  padding: 40px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: #00ff9f;
+  text-shadow: 0 0 10px #00ff9f;
+}
+
+.upload-container {
+  background-color: #1c1c1c;
+  border: 1px solid #00ff9f;
+  border-radius: 8px;
+  padding: 30px;
+  max-width: 600px;
+  margin: auto;
+  box-shadow: 0 0 10px #00ff9f;
+}
+
+input[type="file"] {
+  background-color: #1c1c1c;
+  color: #00ff9f;
+  padding: 10px;
+  border: 1px dashed #00ff9f;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button {
+  margin-top: 20px;
+  padding: 12px 24px;
+  font-size: 1rem;
+  background-color: #00ff9f;
+  border: none;
+  color: #0f0f0f;
+  border-radius: 6px;
+  cursor: pointer;
+  box-shadow: 0 0 8px #00ff9f;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background-color: #0f0f0f;
+  color: #00ff9f;
+  border: 1px solid #00ff9f;
+  box-shadow: 0 0 12px #00ff9f;
+}
+
+.result-box {
+  margin-top: 30px;
+  background-color: #121212;
+  padding: 20px;
+  border-radius: 8px;
+  color: #00ffaa;
+  box-shadow: 0 0 12px #00ffaa;
+}
+/* Typewriter effect for heading */
+.hacker-heading {
+  overflow: hidden;
+  border-right: 2px solid #00ff9f;
+  white-space: nowrap;
+  margin: 0 auto;
+  animation: typing 3s steps(30, end), blink-caret 0.75s step-end infinite;
+  width: fit-content;
+}
+
+/* Typing animation */
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+/* Blinking caret animation */
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: #00ff9f }
+}
