@@ -1,0 +1,67 @@
+
+services:
+  mongo:
+    image: mongo:6
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - intrusai-net
+
+  mongo-express:
+    image: mongo-express
+    ports:
+      - "8082:8081"
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=mongo
+    depends_on:
+      - mongo
+    networks:
+      - intrusai-net
+
+  server:
+    image: intrusai-backend
+    build:
+      context: ./server
+    ports:
+      - "4000:4000"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/IntrusAI
+      - JWT_SECRET=intrusai_secretkey
+      - PORT=4000
+      - FLASK_URL=http://ml-service:5000
+    depends_on:
+      - mongo
+      - ml-service
+    networks:
+      - intrusai-net
+
+  client:
+    image: intrusai-frontend
+    build:
+      context: ./client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - server
+    networks:
+      - intrusai-net
+
+  ml-service:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+    networks:
+      - intrusai-net
+
+volumes:
+  mongo-data:
+
+networks:
+  intrusai-net:
+    driver: bridge

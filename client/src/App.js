@@ -63,12 +63,6 @@ function App() {
               ? result.confidence.toFixed(2)
               : result.confidence}
           </p>
-          <p>
-            <strong>Raw Predictions:</strong>{" "}
-            {Array.isArray(result.prediction)
-              ? result.prediction.join(", ")
-              : JSON.stringify(result.prediction)}
-          </p> 
         </div>
       )}
     </div>
