@@ -95,24 +95,29 @@ function Layout() {
 
   return (
     <>
-      <AppBar position="fixed" sx={{ backgroundColor: "black" }} elevation={1}>
-        <Toolbar sx={{ justifyContent: "flex-end" }}>
-          <Button
-            component={Link}
-            to="/records"
-            size="large"
-            sx={{ color: "#00ff9f", mr: 2 }}
-          >
-            Records
-          </Button>
-          {isLoggedIn && (
-            <Button onClick={logout} size="large" sx={{  color: '#00ff9f' }}>
-              Logout
+      {/* Only render the AppBar if not on the signin or signup page */}
+      {!isAuthPage && (
+        <AppBar position="fixed" sx={{ backgroundColor: "black" }} elevation={1}>
+          <Toolbar sx={{ justifyContent: "flex-end" }}>
+            <Button
+              component={Link}
+              to="/records"
+              size="large"
+              sx={{ color: "#00ff9f", mr: 2 }}
+            >
+              Records
             </Button>
-          )}
-        </Toolbar>
-      </AppBar>
-      <Box sx={{ marginTop: 8 }}>
+            {isLoggedIn && (
+              <Button onClick={logout} size="large" sx={{ color: "#00ff9f" }}>
+                Logout
+              </Button>
+            )}
+          </Toolbar>
+        </AppBar>
+      )}
+
+      {/* Main content */}
+      <Box sx={{ marginTop: isAuthPage ? 0 : 8 }}>
         <Outlet />
       </Box>
     </>
