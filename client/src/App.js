@@ -9,7 +9,7 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   const uploadFile = async () => {
-    if (!file) return alert("Please select a CSV file first.");
+    if (!file) return alert("Please select a CSV file ");
     if (file.type !== "text/csv") {
       return alert("Please upload a valid CSV file.");
     }
