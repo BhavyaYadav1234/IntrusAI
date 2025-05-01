@@ -54,7 +54,7 @@ function Diagnose() {
 
   return (
     <Container sx={{ padding: 4 }}>
-      <h1 className="hacker-heading">AI Intrusion Detection System</h1>
+      <h1 className="hacker-heading">AI Intrusion Detection</h1>
       <div className="upload-input-box">
         <input
           type="file"
