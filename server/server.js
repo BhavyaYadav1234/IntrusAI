@@ -5,11 +5,16 @@ const multer    = require('multer');
 const csvToJson = require('csvtojson');
 const axios     = require('axios');
 const mongoose  = require('mongoose');
+const FormData = require("form-data");
 const fs        = require('fs');
 const path      = require('path');
+require('dotenv').config();
 
 const app = express();
 const PORT = 4000;
+
+const auth = require("./middleware/auth");
+const authRoutes = require("./routes/auth");
 
 // ─── MIDDLEWARE ───────────────────────────────────────────────────────────────
 app.use(cors());
@@ -28,6 +33,11 @@ db.on('error', err => console.error('❌ MongoDB error:', err));
 
 // ─── MONGOOSE SCHEMA ──────────────────────────────────────────────────────────
 const ResultSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',      // references the User model
+    required: true
+  },
   filename:        String,
   model_response:  mongoose.Schema.Types.Mixed,
   file_data:       Buffer,
@@ -37,16 +47,24 @@ const ResultSchema = new mongoose.Schema({
 const ResultModel = mongoose.model('csvrecords', ResultSchema);
 
 // ─── MULTER CONFIGURATION ─────────────────────────────────────────────────────
-const upload = multer({ dest: 'uploads/' }); 
-// stores uploaded CSVs temporarily on disk
+const upload = multer({ dest: 'uploads/' });
+
+// Routes
+app.use("/auth", authRoutes);  // Authentication routes
 
 // ─── UPLOAD & PROCESS ROUTE ───────────────────────────────────────────────────
-app.post('/upload', upload.single('file'), async (req, res) => {
+app.post('/upload', auth, upload.single('file'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'No file uploaded.' });
     }
     console.log('📁 Received:', req.file.originalname);
+
+    // Ensure the user is available from the auth middleware
+    const userId = req.user.id;
+    if (!userId) {
+      return res.status(400).json({ error: 'User not authenticated.' });
+    }
 
     // 1) parse CSV → JSON
     const csvPath = path.resolve(req.file.path);
@@ -68,11 +86,12 @@ app.post('/upload', upload.single('file'), async (req, res) => {
     // 4) read file back into a Buffer
     const fileBuffer = fs.readFileSync(csvPath);
 
-    // 5) save file + ML response in MongoDB
+    // 5) save file + ML response in MongoDB, including user reference
     const saved = await ResultModel.create({
-      filename:      req.file.originalname,
+      user: userId,            // Save the user ID in the 'user' field
+      filename: req.file.originalname,
       model_response: mlRes.data,
-      file_data:     fileBuffer,
+      file_data: fileBuffer,
       file_mimetype: req.file.mimetype
     });
     console.log('✅ Saved to MongoDB, _id:', saved._id);
@@ -88,7 +107,24 @@ app.post('/upload', upload.single('file'), async (req, res) => {
   }
 });
 
-// ─── HEALTH CHECK ─────────────────────────────────────────────────────────────
+// ─── RECORDS ROUTE ───────────────────────────────────────────────────────────
+app.get("/records", auth, async (req, res) => {
+  try {
+    // Ensure that user ID is provided in the request
+    const userId = req.user.id;
+    if (!userId) {
+      return res.status(400).json({ error: 'User not authenticated.' });
+    }
+
+    const records = await ResultModel.find({ user: userId }).sort({ createdAt: -1 });
+    res.json(records);
+  } catch (err) {
+    console.error("Error fetching records:", err);
+    res.status(500).json({ error: "Failed to fetch records" });
+  }
+});
+
+// ─── HEALTH CHECK ROUTE ──────────────────────────────────────────────────────
 app.get('/', (req, res) => {
   res.send('🚀 IDS API is up and running!');
 });
